@@ -41,7 +41,7 @@ exports.listComments = async (req, res) => {
     const ticket = await Ticket.findById(id);
     if (!ticket) return res.status(404).json({ message: "Ticket not found" });
 
-    // RBAC: USER (creator), SUPPORT (assigned), MANAGER
+    // RBAC: USER (creator), SUP RORT (assigned), MANAGER
     if (
       req.user.role.name === "USER" && ticket.created_by.toString() !== req.user._id.toString() &&
       req.user.role.name === "SUPPORT" && ticket.assigned_to?.toString() !== req.user._id.toString()
@@ -62,13 +62,13 @@ exports.listComments = async (req, res) => {
 // edit comment 
 exports.editComment = async (req, res) => {
   try {
-    const { id } = req.params; // comment ID
+    const { id } = req.params; // Comme t ID
     const { comment } = req.body;
 
     const existingComment = await TicketComment.findById(id);
     if (!existingComment) return res.status(404).json({ message: "Comment not found" });
 
-    // Only author or MANAGER can edit
+    // Only o r MANAGER can edit
     if (
       existingComment.user.toString() !== req.user._id.toString() &&
       req.user.role.name !== "MANAGER"
